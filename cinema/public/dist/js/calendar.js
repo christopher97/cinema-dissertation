@@ -1,0 +1,2 @@
+// The Calender
+$('#calendar').datepicker();

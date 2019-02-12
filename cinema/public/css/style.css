@@ -1,0 +1,24 @@
+.input-bar {
+    display: table;
+    width: 100%;
+}
+
+.input-bar-item {
+    display: table-cell;
+}
+
+.width100 {
+    width: 100%;
+}
+
+/* msb = movie submit button */
+
+.msb-container {
+    margin-top: 30px;
+    margin-bottom: 24px;
+}
+
+.movie-submit-button {
+    padding: 12px 36px;
+    width: 20%;
+}
