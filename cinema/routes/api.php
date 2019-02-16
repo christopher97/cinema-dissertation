@@ -21,6 +21,7 @@ Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
 
 Route::group(['middleware' => ['jwt.auth']], function() {
+    Route::post('validate-token', 'UserController@validateToken');
     Route::post('logout', 'UserController@logout');
 });
 

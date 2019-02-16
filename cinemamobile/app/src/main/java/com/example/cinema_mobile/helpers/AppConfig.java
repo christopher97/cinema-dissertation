@@ -2,7 +2,7 @@ package com.example.cinema_mobile.helpers;
 
 public class AppConfig {
 
-    private static final String domain = "http://localhost:8000/api/";
+    private static final String domain = "http://10.0.2.2:8000/api/";
 
     public static String loginURL() {
         return domain + "login";
@@ -10,6 +10,10 @@ public class AppConfig {
 
     public static String registerURL() {
         return domain + "register";
+    }
+
+    public static String validateTokenURL(String token) {
+        return domain + "validate-token?token=" + token;
     }
 
     public static final int UNAUTHORIZED = 401;

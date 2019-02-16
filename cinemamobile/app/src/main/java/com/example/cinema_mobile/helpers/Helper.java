@@ -30,6 +30,15 @@ public final class Helper {
         return preference.getString("token", "");
     }
 
+    public static final void setToken(Context ctx, String token) {
+        SharedPreferences preferences = getPreferences(ctx);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        // Save data
+        editor.putString("token", token);
+        editor.commit();
+    }
+
     public static final void MakeJsonObjectRequest(Context context,
                                                    int method, String url, JSONObject body,
                                                    final VolleyResponseCallback callback) {

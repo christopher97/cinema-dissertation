@@ -2,10 +2,8 @@ package com.example.cinema_mobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,43 +20,46 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    private Context mContext;
-    private int registerCode = 5;
-
-    // input fields
+    private EditText name;
     private EditText email;
     private EditText password;
+    private EditText icNumber;
+    private EditText contactNumber;
+
+    private Context mContext;
+    private boolean registered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
-        this.mContext = getApplicationContext();
+        mContext = getApplicationContext();
+        registered = false;
 
-        this.email = findViewById(R.id.emailLogin);
-        this.password = findViewById(R.id.passwordLogin);
+        this.name = findViewById(R.id.nameRegister);
+        this.email = findViewById(R.id.emailRegister);
+        this.password = findViewById(R.id.passwordRegister);
+        this.icNumber = findViewById(R.id.icRegister);
+        this.contactNumber = findViewById(R.id.contactRegister);
     }
 
     public void register(View view) {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivityForResult(intent, registerCode);
-    }
+        // specify URL
+        String url = AppConfig.registerURL();
 
-    public void login(View view) {
-        // Specify the URL of request
-        String url = AppConfig.loginURL();
-        System.out.println("URL: " + url);
-
-        // Here we create the JSON Object of the HTTP request body we want to send
+        // create JSON object
         JSONObject body = new JSONObject();
         try {
-            body.put("email", email.getText().toString());
-            body.put("password", password.getText().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+            body.put("name", name.getText());
+            body.put("email", email.getText());
+            body.put("password", password.getText());
+            body.put("ic_number", icNumber.getText());
+            body.put("contact_number", contactNumber.getText());
+        } catch (JSONException ex) {
+            ex.printStackTrace();
         }
 
         Helper.MakeJsonObjectRequest(mContext, Request.Method.POST, url, body, new VolleyResponseCallback() {
@@ -66,15 +67,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onError(VolleyError error) {
 
                 NetworkResponse response = error.networkResponse;
-                try {
-                    JSONObject err = new JSONObject(new String(response.data));
-                    String errorBody = err.getString("error");
+                String errorBody = new String(response.data);
 
-                    Toast toast = Toast.makeText(LoginActivity.this, errorBody, Toast.LENGTH_LONG);
-                    toast.show();
-                } catch(JSONException e) {
-                    e.printStackTrace();
-                }
+                Toast toast = Toast.makeText(RegisterActivity.this, errorBody, Toast.LENGTH_LONG);
+                toast.show();
             }
 
             @Override
@@ -85,19 +81,20 @@ public class LoginActivity extends AppCompatActivity {
 
                     // save token
                     Helper.setToken(mContext, token);
+                    registered = true;
 
                     Toast toast = Toast.makeText(
-                            LoginActivity.this,
-                            "Login Successful",
+                            RegisterActivity.this,
+                            "Registration Successful",
                             Toast.LENGTH_LONG
                     );
                     toast.show();
 
-                    Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, MainPageActivity.class);
                     startActivity(intent);
                     finish();
                 } catch (JSONException ex) {
-                    Toast toast = Toast.makeText(LoginActivity.this,
+                    Toast toast = Toast.makeText(RegisterActivity.this,
                             "Login failed, please try again", Toast.LENGTH_LONG);
                     toast.show();
                 }
@@ -111,9 +108,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            finish();
-        }
+    public void finish() {
+        Intent data = new Intent();
+
+        if (registered)
+            setResult(RESULT_OK, data);
+        else
+            setResult(RESULT_CANCELED, data);
+
+        super.finish();
     }
 }

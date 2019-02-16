@@ -3,4 +3,9 @@
     <string name="email_text">Email</string>
     <string name="password_text">Password</string>
     <string name="login_text">Login</string>
+    <string name="name_text">Name</string>
+    <string name="text_ic_number">IC Number</string>
+    <string name="contact_no_text">Contact Number</string>
+    <string name="register_text">Register</string>
+    <string name="new_account_text">Create New Account</string>
 </resources>

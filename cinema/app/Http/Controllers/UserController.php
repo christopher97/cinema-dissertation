@@ -44,6 +44,10 @@ class UserController extends Controller
         return $this->respondWithToken($token);
     }
 
+    public function validateToken(Request $request) {
+        return $this->refreshToken();
+    }
+
     public function logout() {
         auth()->logout();
 
