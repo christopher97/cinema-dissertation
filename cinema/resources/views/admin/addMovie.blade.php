@@ -161,6 +161,11 @@
                                                data-date-format="dd-MM-yyyy" required>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="distributor">Ticket Price (RM)</label>
+                                    <input type="number" class="form-control" id="distributor" placeholder="Ticket Price"
+                                           name="distributor" v-model="movie.ticket_price" required>
+                                </div>
                             </div>
                         </form>
                     </div>

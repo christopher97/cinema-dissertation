@@ -17,7 +17,7 @@ class PlayTimeController extends Controller
     public function fetch(int $movie_id) {
         $playtime = $this->playtime->where('movie_id', '=', $movie_id)->get();
         if (!$playtime->isEmpty()) {
-            return response()->json(['movie' => $playtime], 200);
+            return response()->json(['playtime' => $playtime], 200);
         }
         return response()->json(['message' => 'Invalid Movie ID'], 404);
     }

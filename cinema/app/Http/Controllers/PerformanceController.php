@@ -23,6 +23,14 @@ class PerformanceController extends Controller
         $this->cinema = $cinema;
     }
 
+    public function fetch(Request $request, $id) {
+        $performances = $this->performance->whereHas('playtime.movie', function($query) use ($id) {
+            $query->where('movies.id', '=', $id);
+        })->get();
+
+        return response()->json(['performance' => $performances], 200);
+    }
+
     public function createPlaytime(Request $request) {
         $validator = Validator::make($request->all(), [
             'movie_id'  => 'required',
@@ -62,7 +70,7 @@ class PerformanceController extends Controller
     public function createPerformance(Movie $movie, $cinemas, int $id) {
         foreach($cinemas as $cinema) {
             $begin = new DateTime($movie->start_date);
-            $end = new DateTime($movie->end_date);
+            $end = (new DateTime($movie->end_date))->add(new DateInterval('P1D'));
             $daterange = new DatePeriod($begin, new DateInterval('P1D'), $end);
 
             foreach($daterange as $date) {

@@ -8,6 +8,7 @@ export default {
     release_date: '',
     synopsis: '',
     image_url: '',
+    ticket_price: null,
     distributor: '',
     rating: CensorRatingModel,
     start_date: '',

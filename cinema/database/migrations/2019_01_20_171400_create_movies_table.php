@@ -23,6 +23,7 @@ class CreateMoviesTable extends Migration
             $table->text('image_url');
             $table->string('distributor');
             $table->integer('rating_id')->unsigned();
+            $table->integer('ticket_price')->unsigned();
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();

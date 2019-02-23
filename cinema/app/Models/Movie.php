@@ -11,7 +11,7 @@ class Movie extends Model
 {
     protected $table = "movies";
     protected $fillable = ['title', 'running_time', 'language', 'release_date', 'synopsis', 'image_url',
-                            'distributor', 'rating_id', 'start_date', 'end_date'];
+                            'distributor', 'rating_id', 'ticket_price', 'start_date', 'end_date'];
     protected $guarded = [];
 
     public function casts() {

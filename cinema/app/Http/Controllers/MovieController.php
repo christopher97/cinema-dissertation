@@ -9,6 +9,9 @@ use App\Models\Actor;
 use App\Models\Genre;
 use App\Models\Director;
 use Carbon\Carbon;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 class MovieController extends Controller
 {
@@ -29,11 +32,24 @@ class MovieController extends Controller
         return redirect()->back();
     }
 
-    public function showPlaying() {
+    public function showPlaying(Request $request) {
         $now = Carbon::now('Asia/Kuala_Lumpur');
         $movies = $this->movie->where('start_date', '<=', $now)->where('end_date', '>=', $now)->get();
 
         return view('admin.playingMovie')->with('movies', $movies);
+    }
+
+    public function fetchPlaying() {
+        $now = Carbon::now('Asia/Kuala_Lumpur');
+        $movies = $this->movie->with('rating', 'casts', 'genres', 'directors')
+                                ->where('start_date', '<=', $now)
+                                ->where('end_date', '>=', $now)->get();
+
+        if ($movies) {
+            return response()->json(['movies' => $movies], 200);
+        }
+
+        return response()->json(['message' => 'No movies playing at the moment'], 204);
     }
 
     public function fetch() {
@@ -140,6 +156,7 @@ class MovieController extends Controller
             'synopsis' => 'required',
             'image_url' => 'required',
             'distributor' => 'required',
+            'ticket_price' => 'required',
             'rating' => 'required|array',
             'start_date' => 'required|date',
             'end_date' => 'required|date'
@@ -156,6 +173,7 @@ class MovieController extends Controller
         $movie->distributor     = $request->distributor;
         $movie->image_url       = $request->image_url;
         $movie->synopsis        = $request->synopsis;
+        $movie->ticket_price    = $request->ticket_price;
         $movie->rating_id       = $request->rating['id'];
         $movie->start_date      = $request->start_date;
         $movie->end_date        = $request->end_date;

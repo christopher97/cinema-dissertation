@@ -2,10 +2,8 @@ package com.example.cinema_mobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.example.cinema_mobile.helpers.AppConfig;
 import com.example.cinema_mobile.helpers.Helper;
-import com.example.cinema_mobile.helpers.VolleyResponseCallback;
+import com.example.cinema_mobile.helpers.JsonResponseCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Helper.MakeJsonObjectRequest(mContext, Request.Method.POST, url, body, new VolleyResponseCallback() {
+        Helper.MakeJsonObjectRequest(mContext, Request.Method.POST, url, body, new JsonResponseCallback() {
             @Override
             public void onError(VolleyError error) {
 

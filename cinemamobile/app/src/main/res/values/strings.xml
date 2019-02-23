@@ -8,4 +8,26 @@
     <string name="contact_no_text">Contact Number</string>
     <string name="register_text">Register</string>
     <string name="new_account_text">Create New Account</string>
+    <string name="home_text">Home</string>
+    <string name="tickets_text">Tickets</string>
+    <string name="account_text">Account</string>
+    <string name="logout_text">Logout</string>
+    <string name="now_playing_text">Now Playing</string>
+    <string name="movie_poster_text">Movie Poster</string>
+    <string name="title_text">Title</string>
+    <string name="running_time_text">Running Time</string>
+    <string name="language_text">Language</string>
+    <string name="release_date_text">Release Date</string>
+    <string name="distributor_rating">Distributor</string>
+    <string name="censor_rating_text">Censor Rating</string>
+    <string name="casts_text">Casts</string>
+    <string name="genre_text">Genre</string>
+    <string name="director_text">Director</string>
+    <string name="synopsis_text">Synopsis</string>
+    <string name="purchase_tickets_text">Purchase Tickets</string>
+    <string name="old_password_text">Old Password</string>
+    <string name="new_password_text">New Password</string>
+    <string name="save_changes_text">Save Changes</string>
+    <string name="purchase_ticket_text">Purchase Ticket</string>
+    <string name="total_tickets_text">Total Tickets</string>
 </resources>

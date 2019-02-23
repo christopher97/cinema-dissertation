@@ -89,6 +89,10 @@
                                     <label for="end_date">Play End Date</label>
                                     <p class="form-control">{{ $movie->end_date }}</p>
                                 </div>
+                                <div class="form-group">
+                                    <label for="end_date">Ticket Price</label>
+                                    <p class="form-control">RM {{ $movie->ticket_price }}</p>
+                                </div>
                             </div>
                         </form>
                     </div>

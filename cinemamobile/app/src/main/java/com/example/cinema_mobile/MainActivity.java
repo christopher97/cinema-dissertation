@@ -2,7 +2,6 @@ package com.example.cinema_mobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,14 +12,12 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.example.cinema_mobile.helpers.AppConfig;
 import com.example.cinema_mobile.helpers.Helper;
-import com.example.cinema_mobile.helpers.VolleyResponseCallback;
+import com.example.cinema_mobile.helpers.JsonResponseCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,10 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // check if user is logged in
         mContext = getApplicationContext();
         String token = getToken();
-        System.out.println("TOKEN:" + token);
-        Log.d("TOKEN VALUE: ", token);
         if (token.equals("")) {
-            System.out.println("kontol");
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         String url = AppConfig.validateTokenURL(token);
 
         Helper.MakeJsonObjectRequest(mContext, Request.Method.POST, url, null,
-                new VolleyResponseCallback() {
+                new JsonResponseCallback() {
                     @Override
                     public void onError(VolleyError error) {
                         NetworkResponse response = error.networkResponse;

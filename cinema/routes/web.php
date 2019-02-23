@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/movie/playing', "movieController@showPlaying")->name('playingMovie');
+
 Route::prefix('admin')->group(function () {
 
     Route::get('/login', function() {

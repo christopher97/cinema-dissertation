@@ -23,6 +23,8 @@ Route::post('register', 'UserController@register');
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('validate-token', 'UserController@validateToken');
     Route::post('logout', 'UserController@logout');
+    Route::get('user', 'UserController@getUser');
+    Route::put('user/update', 'UserController@update');
 });
 
 Route::get('censor-rating', 'CensorRatingController@fetch');
@@ -55,6 +57,7 @@ Route::get('movie/{id}', 'MovieController@find');
 Route::post('movie', 'MovieController@create');
 Route::put('movie/{id}', 'MovieController@update');
 Route::post('movie/{id}/pair', 'MovieController@pairMovie');
+Route::get('movies/playing', 'MovieController@fetchPlaying');
 
 // -- PLAYTIME -- //
 Route::get('movie/playtime/{id}', 'PlayTimeController@fetch');
@@ -73,3 +76,6 @@ Route::get('cinema', 'CinemaController@fetch');
 Route::get('cinema/{id}', 'CinemaController@fetch');
 Route::post('cinema', 'CinemaController@create');
 Route::put('cinema/{id}', 'CinemaController@update');
+
+// --- PERFORMANCE --- //
+Route::get('movie/{id}/performance', 'PerformanceController@fetch');

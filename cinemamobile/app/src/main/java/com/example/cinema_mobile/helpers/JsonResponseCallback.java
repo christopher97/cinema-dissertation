@@ -4,7 +4,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONObject;
 import java.util.HashMap;
 
-public interface VolleyResponseCallback {
+public interface JsonResponseCallback {
     void onError(VolleyError error);
 
     void onResponse(JSONObject response);

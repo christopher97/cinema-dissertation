@@ -13,7 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.example.cinema_mobile.helpers.AppConfig;
 import com.example.cinema_mobile.helpers.Helper;
-import com.example.cinema_mobile.helpers.VolleyResponseCallback;
+import com.example.cinema_mobile.helpers.JsonResponseCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-        Helper.MakeJsonObjectRequest(mContext, Request.Method.POST, url, body, new VolleyResponseCallback() {
+        Helper.MakeJsonObjectRequest(mContext, Request.Method.POST, url, body, new JsonResponseCallback() {
             @Override
             public void onError(VolleyError error) {
 

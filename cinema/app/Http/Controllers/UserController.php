@@ -44,6 +44,35 @@ class UserController extends Controller
         return $this->respondWithToken($token);
     }
 
+    public function update(Request $request) {
+        $user = [
+            'email' => $request->email,
+            'password' => $request->oldPassword,
+        ];
+
+        if (auth()->validate($user)) {
+            try {
+                $user = auth()->user();
+
+                $user->name = $request->name;
+                $user->password = Hash::make($request->newPassword);
+                $user->ic_number = $request->ic_number;
+                $user->contact_number = $request->contact_number;
+
+                $user->save();
+                return response()->json(['message' => 'Your data has been updated'], 200);
+            } catch (Exception $ex) {
+                return response()->json(['error' => $ex], 400);
+            }
+        }
+        return response()->json(['error' => 'Old password does not match!'], 400);
+    }
+
+    public function getUser(Request $request) {
+        $user = auth()->user();
+        return response()->json(['user' => $user], 200);
+    }
+
     public function validateToken(Request $request) {
         return $this->refreshToken();
     }
