@@ -36,26 +36,28 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        style="@style/customButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="60dp"
         android:onClick="login"
         android:text="@string/login_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordLogin" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/button5"
+        style="@style/inverseButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="60dp"
         android:onClick="register"
-        android:text="@string/new_account_text"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
+        android:text="@string/sign_up_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />

@@ -17,7 +17,6 @@ class CreateTicketsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('performance_id')->unsigned();
-            $table->integer('cinema_id')->unsigned();
             $table->integer('qty');
             $table->integer('status');
             $table->timestamps();
@@ -30,10 +29,6 @@ class CreateTicketsTable extends Migration
 
             $table->foreign('performance_id')
                     ->references('id')->on('performances')
-                    ->onDelete('cascade')->onUpdate('cascade');
-
-            $table->foreign('cinema_id')
-                    ->references('id')->on('cinemas')
                     ->onDelete('cascade')->onUpdate('cascade');
         });
     }

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use DateTime;
 use DatePeriod;
 use DateInterval;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class PerformanceController extends Controller
 {
@@ -24,9 +26,10 @@ class PerformanceController extends Controller
     }
 
     public function fetch(Request $request, $id) {
+        $now = Carbon::now('Asia/Kuala_Lumpur');
         $performances = $this->performance->whereHas('playtime.movie', function($query) use ($id) {
             $query->where('movies.id', '=', $id);
-        })->get();
+        })->where('date', '>=', $now)->skip(0)->take(50)->get();
 
         return response()->json(['performance' => $performances], 200);
     }
@@ -85,5 +88,31 @@ class PerformanceController extends Controller
                 $performance->save();
             }
         }
+    }
+
+    public function checkAvailability(Request $request) {
+        // $validator = Validator::make($request->all(), [
+        //     'play_time_id'  => 'required',
+        //     'cinema_id'     => 'required',
+        //     'date'          => 'required|date'
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => 'Incorrect Data'], 400);
+        // }
+
+        $playtimeID = $request->play_time_id;
+        $cinemaID = $request->cinema_id;
+        $date = $request->date;
+
+        $performance = $this->performance->where('play_time_id', '=', $playtimeID)
+                                        ->where('cinema_id', '=', $cinemaID)
+                                        ->where('date', '=', $date)
+                                        ->first();
+
+        if ($performance) {
+            return response()->json(['performance' => $performance], 200);
+        }
+        return response()->json(['error' => 'Not Found'], 404);
     }
 }

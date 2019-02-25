@@ -60,4 +60,6 @@ public class Performance {
     public void setBookedSeat(int bookedSeat) {
         this.bookedSeat = bookedSeat;
     }
+
+    public int getAvailableSeat() { return totalSeat-bookedSeat; }
 }

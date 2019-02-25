@@ -1,6 +1,5 @@
 package com.example.cinema_mobile.helpers;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +8,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -170,6 +169,9 @@ public final class Helper {
             }
         };
 
+        netResponseRequest.setRetryPolicy
+                (new DefaultRetryPolicy(10000, 1, 1.0f));
+
         VolleySingleton.getInstance(context).addToRequestQueue(netResponseRequest);
     }
 
@@ -205,6 +207,9 @@ public final class Helper {
                 return headers;
             }
         };
+
+        jsObjRequest.setRetryPolicy
+                (new DefaultRetryPolicy(10000, 1, 1.0f));
 
         VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
     }

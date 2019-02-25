@@ -30,4 +30,11 @@
     <string name="save_changes_text">Save Changes</string>
     <string name="purchase_ticket_text">Purchase Ticket</string>
     <string name="total_tickets_text">Total Tickets</string>
+    <string name="ticket_price_text">Ticket Price</string>
+    <string name="ticket_available_text">Ticket(s) Available</string>
+    <string name="input_data_text">Please input the fields</string>
+    <string name="sign_up_text">Sign Up</string>
+    <string name="new_tickets_text">New Tickets</string>
+    <string name="past_tickets_text">Past Tickets</string>
+    <string name="use_ticket_text">Use Ticket</string>
 </resources>

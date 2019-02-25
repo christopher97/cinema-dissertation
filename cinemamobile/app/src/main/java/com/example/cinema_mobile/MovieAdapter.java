@@ -60,10 +60,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         holder.ratingTextView.setText(movie.getRating());
         Picasso.get().load(movie.getImageURL()).into(holder.posterImageView);
 
+        final int currPos = position;
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onItemClick(position);
+                onClick.onItemClick(currPos);
             }
         });
     }

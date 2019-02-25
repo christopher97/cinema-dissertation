@@ -19,6 +19,8 @@ public class Movie implements Parcelable {
     private int ticketPrice;
     private String distributor;
     private String rating;
+    private Date startDate;
+    private Date endDate;
 
     private ArrayList<String> casts;
     private ArrayList<String> genres;
@@ -42,6 +44,8 @@ public class Movie implements Parcelable {
         this.casts = bundle.getStringArrayList("casts");
         this.genres = bundle.getStringArrayList("genres");
         this.directors = bundle.getStringArrayList("directors");
+        this.startDate = new Date(bundle.getLong("startDate"));
+        this.endDate = new Date(bundle.getLong("endDate"));
     }
 
     public int getId() {
@@ -144,6 +148,22 @@ public class Movie implements Parcelable {
         this.directors = directors;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -165,6 +185,8 @@ public class Movie implements Parcelable {
         bundle.putStringArrayList("casts", casts);
         bundle.putStringArrayList("genres", genres);
         bundle.putStringArrayList("directors", directors);
+        bundle.putLong("startDate", startDate.getTime());
+        bundle.putLong("endDate", endDate.getTime());
 
         parcel.writeBundle(bundle);
     }

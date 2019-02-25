@@ -117,13 +117,16 @@ public class MainPageActivity extends AppCompatActivity {
             movie.setTitle(curr.getString("title"));
             movie.setRunningTime(curr.getInt("running_time"));
             movie.setLanguage(curr.getString("language"));
-            movie.setReleaseDate
-                    (new SimpleDateFormat("yyyy-MM-dd")
-                            .parse(curr.getString("release_date")));
+            movie.setReleaseDate(
+                    AppConfig.dateFormat().parse(curr.getString("release_date")));
             movie.setTicketPrice(curr.getInt("ticket_price"));
             movie.setSynopsis(curr.getString("synopsis"));
             movie.setImageURL(curr.getString("image_url"));
             movie.setDistributor(curr.getString("distributor"));
+            movie.setStartDate(
+                    AppConfig.dateFormat().parse(curr.getString("start_date")));
+            movie.setEndDate(
+                    AppConfig.dateFormat().parse(curr.getString("end_date")));
 
             JSONObject rating = curr.getJSONObject("rating");
             movie.setRating(rating.getString("description"));

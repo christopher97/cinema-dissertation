@@ -25,6 +25,10 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('logout', 'UserController@logout');
     Route::get('user', 'UserController@getUser');
     Route::put('user/update', 'UserController@update');
+
+    Route::post('ticket/purchase', 'TicketController@purchase');
+    Route::put('ticket/invalidate', 'TicketController@useTicket');
+    Route::get('tickets', 'TicketController@fetch');
 });
 
 Route::get('censor-rating', 'CensorRatingController@fetch');
@@ -66,7 +70,7 @@ Route::post('movie/playtime', 'PerformanceController@createPlaytime');
 Route::put('playtime/{id}', 'PlayTimeController@update');
 
 // -- TICKET -- //
-Route::get('ticket/user/{id}', 'TicketController@fetch');
+// Route::get('ticket/user/{id}', 'TicketController@fetch');
 Route::get('ticket/{id}', 'TicketController@find');
 Route::post('ticket', 'TicketController@create');
 Route::put('ticket/{id}', 'TicketController@update');
@@ -79,3 +83,4 @@ Route::put('cinema/{id}', 'CinemaController@update');
 
 // --- PERFORMANCE --- //
 Route::get('movie/{id}/performance', 'PerformanceController@fetch');
+Route::post('performance/check', 'PerformanceController@checkAvailability');
