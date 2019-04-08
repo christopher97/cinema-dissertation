@@ -81,6 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // save token
                     Helper.setToken(mContext, token);
+                    Helper.setPref(mContext, false);
                     registered = true;
 
                     Toast toast = Toast.makeText(
@@ -90,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                     );
                     toast.show();
 
-                    Intent intent = new Intent(RegisterActivity.this, MainPageActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, PreferenceActivity.class);
                     startActivity(intent);
                     finish();
                 } catch (JSONException ex) {

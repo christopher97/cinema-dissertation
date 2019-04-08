@@ -1,5 +1,7 @@
 package com.example.cinema_mobile.models;
 
+import android.support.annotation.NonNull;
+
 public class Actor {
 
     private int id;
@@ -26,5 +28,10 @@ public class Actor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @NonNull
+    public String toString() {
+        return this.name;
     }
 }

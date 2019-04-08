@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MenuItem;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -22,10 +25,12 @@ import com.example.cinema_mobile.MainPageActivity;
 import com.example.cinema_mobile.R;
 import com.example.cinema_mobile.TicketActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +40,10 @@ public final class Helper {
         /*
          *      private constructor to prevent instantiation of this class
          */
+    }
+
+    public static final int dpToPixel(int dp, DisplayMetrics displayMetrics) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
     }
 
     public static final SharedPreferences getPreferences(Context ctx) {
@@ -55,11 +64,26 @@ public final class Helper {
         editor.commit();
     }
 
+    public static boolean getPref(Context ctx) {
+        SharedPreferences preference = getPreferences(ctx);
+        return preference.getBoolean("preference_set", false);
+    }
+
+    public static final void setPref(Context ctx, boolean preference_set) {
+        SharedPreferences preferences = getPreferences(ctx);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        // Save data
+        editor.putBoolean("preference_set", preference_set);
+        editor.commit();
+    }
+
     public static final void logout(Context ctx) {
         SharedPreferences pref = getPreferences(ctx);
         SharedPreferences.Editor editor = pref.edit();
 
         editor.remove("token");
+        editor.remove("preference_set");
         editor.commit();
     }
 
@@ -212,5 +236,19 @@ public final class Helper {
                 (new DefaultRetryPolicy(10000, 1, 1.0f));
 
         VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
+    }
+
+    public static final JSONArray spinnerToJSONArray(ArrayList<Spinner> spinners) {
+        JSONArray arr = new JSONArray();
+        for(int i=0; i<spinners.size(); i++) {
+            Spinner curr = spinners.get(i);
+            String name = String.valueOf(curr.getSelectedItem());
+
+            if (!name.isEmpty()) {
+                arr.put(name);
+            }
+        }
+
+        return arr;
     }
 }

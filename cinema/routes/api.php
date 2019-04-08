@@ -29,7 +29,15 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('ticket/purchase', 'TicketController@purchase');
     Route::put('ticket/invalidate', 'TicketController@useTicket');
     Route::get('tickets', 'TicketController@fetch');
+
+    // --- PREFERENCE --- //
+    Route::post('preference', 'FileController@createPreference');
+    Route::put('preference', 'FileController@updateModel');
+    // Route::get('preference/check', 'FileController@checkPreference');
+    Route::get('movies/recommendations', 'MovieController@getRecommendedMovies');
 });
+
+Route::get('python', 'FileController@runScript');
 
 Route::get('censor-rating', 'CensorRatingController@fetch');
 Route::post('censor-rating', 'CensorRatingController@create');

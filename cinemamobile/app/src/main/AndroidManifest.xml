@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".TicketDetailActivity"></activity>
+        <activity android:name=".PreferenceActivity"></activity>
+        <activity android:name=".TicketDetailActivity" />
         <activity android:name=".PurchaseActivity" />
         <activity android:name=".AccountActivity" />
         <activity android:name=".MovieDetailActivity" />

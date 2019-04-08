@@ -8,7 +8,11 @@ return [
     ],
 
     'Valid' => true,
-    'Used' => false
+    'Used' => false,
+
+    'textFileURL' => 'http://localhost:8008/api/textfile/',
+
+    'CREATED' => 201,
 ]
 
 ?>

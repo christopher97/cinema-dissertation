@@ -21,7 +21,8 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'ic_number' => $request->ic_number,
-            'contact_number' => $request->contact_number
+            'contact_number' => $request->contact_number,
+            'preference_set'=> false
         ];
 
         try {
@@ -41,7 +42,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, auth()->user()->preference_set);
     }
 
     public function update(Request $request) {
@@ -89,11 +90,12 @@ class UserController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function respondWithToken($token) {
+    public function respondWithToken($token, $preference_set) {
         return response()->json([
             'token' => $token,
             'token_type' => 'Bearer',
             'expires' => auth('api')->factory()->getTTL() * 60,
+            'preference_set' => $preference_set
         ]);
     }
 }

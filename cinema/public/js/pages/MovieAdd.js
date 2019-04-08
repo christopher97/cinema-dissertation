@@ -66,7 +66,7 @@ const app = new Vue({
                 directors
             };
 
-            const url = window.location.origin + '/admin/movie';
+            const url = window.location.origin + 'cinema/public/admin/movie';
 
             MovieService.create(this.movie)
                 .then((response) => {

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.android.volley.NetworkResponse;
@@ -35,11 +36,19 @@ public class MainPageActivity extends AppCompatActivity {
 
     private String TAG = "MainPageActivity";
     private ArrayList<Movie> movies = new ArrayList<Movie>();
+    private ArrayList<Movie> recommendedMovies = new ArrayList<Movie>();
+
+    // recommendedView Variables
+    RecyclerView recommendedListView;
+    RecyclerView.LayoutManager recommendedLayoutManager;
+    MovieAdapter recommendedAdapter;
 
     // RecyclerView Variables
     RecyclerView playingListView;
-    RecyclerView.LayoutManager layoutManager;
-    MovieAdapter adapter;
+    RecyclerView.LayoutManager playingLayoutManager;
+    MovieAdapter playingAdapter;
+
+    private String getToken() { return Helper.getToken(mContext); }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +57,31 @@ public class MainPageActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
+        this.checkPreference();
         this.handleRecyclerView();
         this.setupNavbar();
         this.loadMovies();
     }
 
+    private void checkPreference() {
+        boolean preference_set = Helper.getPref(mContext);
+        if (!preference_set) {
+            Intent intent = new Intent(MainPageActivity.this, PreferenceActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     private void setRecyclerData() {
         if (!movies.isEmpty()) {
-            adapter.notifyDataSetChanged();
+            playingAdapter.notifyDataSetChanged();
+            recommendedAdapter.notifyDataSetChanged();
         }
     }
 
     private void loadMovies() {
-        String url = AppConfig.moviesURL();
+        String token = Helper.getToken(mContext);
+        String url = AppConfig.recommendedURL(token);
         Helper.MakeNetworkResponseRequest(mContext, Request.Method.GET, url, null, new NetworkResponseCallback() {
             @Override
             public void onError(VolleyError error) {
@@ -93,6 +114,11 @@ public class MainPageActivity extends AppCompatActivity {
 
                             if (movie != null) {
                                 movies.add(movie);
+
+                                boolean recommended = curr.getBoolean("recommended");
+                                if (recommended) {
+                                    recommendedMovies.add(movie);
+                                }
                             }
                         }
 
@@ -105,7 +131,11 @@ public class MainPageActivity extends AppCompatActivity {
 
             @Override
             public HashMap<String, String> setHeaders() {
-                return null;
+                String token = getToken();
+
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         });
     }
@@ -166,13 +196,17 @@ public class MainPageActivity extends AppCompatActivity {
     private void handleRecyclerView() {
         // handle recyclerView
         playingListView = findViewById(R.id.playingList);
+        recommendedListView = findViewById(R.id.recommendedList);
 
-        layoutManager = new LinearLayoutManager(this);
-        playingListView.setLayoutManager(layoutManager);
+        playingLayoutManager = new LinearLayoutManager(this);
+        playingListView.setLayoutManager(playingLayoutManager);
+        
+        recommendedLayoutManager = new LinearLayoutManager(this);
+        recommendedListView.setLayoutManager(recommendedLayoutManager);
 
-        // set adapter
-        adapter = new MovieAdapter(movies);
-        adapter.setOnClick(new MovieAdapter.OnItemClicked() {
+        // set playingAdapter
+        playingAdapter = new MovieAdapter(movies);
+        playingAdapter.setOnClick(new MovieAdapter.OnItemClicked() {
             @Override
             public void onItemClick(int position) {
                 Movie movie = movies.get(position);
@@ -181,7 +215,20 @@ public class MainPageActivity extends AppCompatActivity {
                 mContext.startActivity(intent);
             }
         });
-        playingListView.setAdapter(adapter);
+        playingListView.setAdapter(playingAdapter);
+        
+        // set recommendedAdapter
+        recommendedAdapter = new MovieAdapter(recommendedMovies);
+        recommendedAdapter.setOnClick(new MovieAdapter.OnItemClicked() {
+            @Override
+            public void onItemClick(int position) {
+                Movie movie = movies.get(position);
+                Intent intent = new Intent(mContext, MovieDetailActivity.class);
+                intent.putExtra("movie", movie);
+                mContext.startActivity(intent);
+            }
+        });
+        recommendedListView.setAdapter(recommendedAdapter);
     }
 
     private void setupNavbar() {

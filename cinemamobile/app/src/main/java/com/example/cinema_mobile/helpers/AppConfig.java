@@ -12,7 +12,7 @@ public class AppConfig {
         return new SimpleDateFormat("EEE, MMMM dd, yyyy");
     }
 
-    private static final String domain = "http://10.0.2.2:8000/api/";
+    private static final String domain = "http://10.0.2.2/cinema/public/api/";
 
     public static String loginURL() {
         return domain + "login";
@@ -21,6 +21,7 @@ public class AppConfig {
         return domain + "register";
     }
     public static String moviesURL() { return domain + "movies/playing"; }
+    public static String recommendedURL(String token) { return domain + "movies/recommendations?token=" + token; }
     public static String updateUserURL(String token) { return domain + "user/update?token=" + token; }
     public static String userURL(String token) {
         return domain + "user?token=" + token;
@@ -39,6 +40,10 @@ public class AppConfig {
     public static String purchaseURL(String token) { return domain + "ticket/purchase?token=" + token; }
     public static String ticketsURL(String token) { return domain + "tickets?token=" + token; }
     public static String invalidateURL(String token) { return domain + "ticket/invalidate?token=" + token; }
+    public static String actorsURL() { return domain + "actor"; }
+    public static String genresURL() { return domain + "genre"; }
+    public static String directorsURL() { return domain + "director"; }
+    public static String preferenceURL(String token) { return domain + "preference?token=" + token; }
 
     public static String getQtyString(int qty) {
         return qty + " ticket(s)";

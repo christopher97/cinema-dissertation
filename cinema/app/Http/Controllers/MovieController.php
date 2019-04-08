@@ -3,25 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Actor;
 use App\Models\Genre;
 use App\Models\Director;
+use App\Helpers\Helper;
 use Carbon\Carbon;
 use DateTime;
 use DatePeriod;
 use DateInterval;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class MovieController extends Controller
 {
-    protected $movie, $actor, $genre, $director;
+    protected $movie, $actor, $genre, $director, $config;
 
     public function __construct(Movie $movie, Actor $actor, Genre $genre, Director $director) {
         $this->movie = $movie;
         $this->actor = $actor;
         $this->genre = $genre;
         $this->director = $director;
+        $this->config = Config::get('constants');
     }
 
     public function showDetail(int $id) {
@@ -39,17 +44,57 @@ class MovieController extends Controller
         return view('admin.playingMovie')->with('movies', $movies);
     }
 
+    public function getRecommendedMovies(Request $request) {
+        $movies = $this->getPlaying();
+
+        $user = auth()->user();
+        $param = Helper::processRequest($this->config['textFileURL'].$user->id, 'GET', null)->original["file"];
+
+        // fetch list of movies
+        $output = array();
+        foreach($movies as $movie) {
+            // create bag of words
+            $bagOfWords = "";
+            $bagOfWords = Helper::processArray($bagOfWords, Helper::objectToArray($movie->casts));
+            $bagOfWords = Helper::processArray($bagOfWords, Helper::objectToArray($movie->genres));
+            $bagOfWords = Helper::processArray($bagOfWords, Helper::objectToArray($movie->directors));
+
+            $process = new Process("python " . public_path() . "\python\hello.py \"{$param}\" \"{$bagOfWords}\"");
+            $process->run();
+
+            // executes after the command finishes
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+
+            $matchPercentage = (double) ($process->getOutput());
+            if ($matchPercentage >= 0.200000) {
+                $movie->recommended = true;
+            } else {
+                $movie->recommended = false;
+            }
+        }
+
+        return response()->json(['movies' => $movies], 200);
+    }
+
     public function fetchPlaying() {
-        $now = Carbon::now('Asia/Kuala_Lumpur');
-        $movies = $this->movie->with('rating', 'casts', 'genres', 'directors')
-                                ->where('start_date', '<=', $now)
-                                ->where('end_date', '>=', $now)->get();
+        $movies = $this->getPlaying();
 
         if ($movies) {
             return response()->json(['movies' => $movies], 200);
         }
 
         return response()->json(['message' => 'No movies playing at the moment'], 204);
+    }
+
+    private function getPlaying() {
+        $now = Carbon::now('Asia/Kuala_Lumpur');
+        $movies = $this->movie->with('rating', 'casts', 'genres', 'directors')
+                                ->where('start_date', '<=', $now)
+                                ->where('end_date', '>=', $now)->get();
+
+        return $movies;
     }
 
     public function fetch() {

@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import com.pusher.pushnotifications.PushNotifications;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Context mContext;
@@ -80,9 +82,11 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     // save token in shared preferences
                     String token = response.getString("token");
+                    boolean preference_set = (response.getInt("preference_set") == 1);
 
                     // save token
                     Helper.setToken(mContext, token);
+                    Helper.setPref(mContext, preference_set);
 
                     Toast toast = Toast.makeText(
                             LoginActivity.this,
@@ -91,9 +95,18 @@ public class LoginActivity extends AppCompatActivity {
                     );
                     toast.show();
 
-                    Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
-                    startActivity(intent);
-                    finish();
+                    PushNotifications.start(mContext, "19c2b991-0ead-4765-b461-a6e2b2659eab");
+                    PushNotifications.addDeviceInterest("hello");
+
+                    if (!preference_set) {
+                        Intent intent = new Intent(LoginActivity.this, PreferenceActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } catch (JSONException ex) {
                     Toast toast = Toast.makeText(LoginActivity.this,
                             "Login failed, please try again", Toast.LENGTH_LONG);

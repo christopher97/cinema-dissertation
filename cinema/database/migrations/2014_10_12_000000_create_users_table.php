@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('ic_number');
             $table->string('contact_number');
+            $table->boolean('preference_set');
             $table->timestamps();
         });
     }

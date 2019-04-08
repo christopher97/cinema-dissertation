@@ -22,6 +22,7 @@
     <string name="censor_rating_text">Censor Rating</string>
     <string name="casts_text">Casts</string>
     <string name="genre_text">Genre</string>
+    <string name="genres_text">Genres</string>
     <string name="director_text">Director</string>
     <string name="synopsis_text">Synopsis</string>
     <string name="purchase_tickets_text">Purchase Tickets</string>
@@ -37,4 +38,12 @@
     <string name="new_tickets_text">New Tickets</string>
     <string name="past_tickets_text">Past Tickets</string>
     <string name="use_ticket_text">Use Ticket</string>
+    <string name="actors_text">Actors</string>
+    <string name="preference_text">Your Personal Preference</string>
+    <string name="plus_text">+</string>
+    <string name="minus_text">-</string>
+    <string name="preference_details_text">Tell us your favorite actors, genres, and directors, so we can recommend movies you might like!</string>
+    <string name="save_preferences_text">Save Preferences</string>
+    <string name="directors_text">Directors</string>
+    <string name="recommended_text">Recommended</string>
 </resources>
