@@ -22,6 +22,7 @@ public class AppConfig {
     }
     public static String moviesURL() { return domain + "movies/playing"; }
     public static String recommendedURL(String token) { return domain + "movies/recommendations?token=" + token; }
+    public static String beamsTokenURL(String token) { return domain + "pusher/beams-auth?token=" + token; }
     public static String updateUserURL(String token) { return domain + "user/update?token=" + token; }
     public static String userURL(String token) {
         return domain + "user?token=" + token;
@@ -77,4 +78,6 @@ public class AppConfig {
         "Used",
         "Valid"
     };
+
+    public static final String beamsInstanceId = "19c2b991-0ead-4765-b461-a6e2b2659eab";
 }

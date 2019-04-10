@@ -24,6 +24,7 @@ import com.example.cinema_mobile.MainActivity;
 import com.example.cinema_mobile.MainPageActivity;
 import com.example.cinema_mobile.R;
 import com.example.cinema_mobile.TicketActivity;
+import com.pusher.pushnotifications.PushNotifications;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,6 +86,8 @@ public final class Helper {
         editor.remove("token");
         editor.remove("preference_set");
         editor.commit();
+
+        PushNotifications.clearAllState();
     }
 
     public static final void onNavigationItemSelected
@@ -250,5 +253,9 @@ public final class Helper {
         }
 
         return arr;
+    }
+
+    public static final void configureNotification(Context mContext) {
+
     }
 }

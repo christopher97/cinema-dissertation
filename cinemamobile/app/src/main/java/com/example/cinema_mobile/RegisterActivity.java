@@ -14,7 +14,14 @@ import com.android.volley.VolleyError;
 import com.example.cinema_mobile.helpers.AppConfig;
 import com.example.cinema_mobile.helpers.Helper;
 import com.example.cinema_mobile.helpers.JsonResponseCallback;
+import com.pusher.pushnotifications.BeamsCallback;
+import com.pusher.pushnotifications.PushNotifications;
+import com.pusher.pushnotifications.PusherCallbackError;
+import com.pusher.pushnotifications.auth.AuthData;
+import com.pusher.pushnotifications.auth.AuthDataGetter;
+import com.pusher.pushnotifications.auth.BeamsTokenProvider;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,9 +98,8 @@ public class RegisterActivity extends AppCompatActivity {
                     );
                     toast.show();
 
-                    Intent intent = new Intent(RegisterActivity.this, PreferenceActivity.class);
-                    startActivity(intent);
-                    finish();
+                    String userID = String.valueOf(response.getInt("user_id"));
+                    integrateBeams(userID);
                 } catch (JSONException ex) {
                     Toast toast = Toast.makeText(RegisterActivity.this,
                             "Login failed, please try again", Toast.LENGTH_LONG);
@@ -104,6 +110,43 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public HashMap<String, String> setHeaders() {
                 return null;
+            }
+        });
+    }
+
+    private void integrateBeams(String userID) {
+        final String token = Helper.getToken(mContext);
+        BeamsTokenProvider tokenProvider = new BeamsTokenProvider(
+                AppConfig.beamsTokenURL(token),
+                new AuthDataGetter() {
+                    @NotNull
+                    @Override
+                    public AuthData getAuthData() {
+                        // Headers and URL query params your auth endpoint needs to
+                        // request a Beams Token for a given user
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        HashMap<String, String> queryParams = new HashMap<>();
+                        return new AuthData(
+                                headers,
+                                queryParams
+                        );
+                    }
+                }
+        );
+
+        PushNotifications.setUserId(userID, tokenProvider, new BeamsCallback<Void, PusherCallbackError>() {
+            @Override
+            public void onSuccess(@NotNull Void... voids) {
+                Intent intent = new Intent(RegisterActivity.this, PreferenceActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(PusherCallbackError pusherCallbackError) {
+                Toast toast = Toast.makeText(mContext, "An error occurred.", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }

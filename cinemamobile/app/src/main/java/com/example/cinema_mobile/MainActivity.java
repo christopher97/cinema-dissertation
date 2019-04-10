@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.example.cinema_mobile.helpers.AppConfig;
 import com.example.cinema_mobile.helpers.Helper;
 import com.example.cinema_mobile.helpers.JsonResponseCallback;
+import com.pusher.pushnotifications.PushNotifications;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         // check if user is logged in
         mContext = getApplicationContext();
         String token = getToken();
+        PushNotifications.start(mContext, AppConfig.beamsInstanceId);
         if (token.equals("")) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);

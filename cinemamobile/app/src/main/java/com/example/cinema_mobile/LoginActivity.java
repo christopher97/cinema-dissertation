@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,12 +16,18 @@ import com.example.cinema_mobile.helpers.AppConfig;
 import com.example.cinema_mobile.helpers.Helper;
 import com.example.cinema_mobile.helpers.JsonResponseCallback;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import com.pusher.pushnotifications.BeamsCallback;
 import com.pusher.pushnotifications.PushNotifications;
+import com.pusher.pushnotifications.PusherCallbackError;
+import com.pusher.pushnotifications.auth.AuthData;
+import com.pusher.pushnotifications.auth.AuthDataGetter;
+import com.pusher.pushnotifications.auth.BeamsTokenProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     // input fields
     private EditText email;
     private EditText password;
+
+    private boolean preference_set;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     // save token in shared preferences
                     String token = response.getString("token");
-                    boolean preference_set = (response.getInt("preference_set") == 1);
+                    preference_set = (response.getInt("preference_set") == 1);
 
                     // save token
                     Helper.setToken(mContext, token);
@@ -95,18 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                     );
                     toast.show();
 
-                    PushNotifications.start(mContext, "19c2b991-0ead-4765-b461-a6e2b2659eab");
-                    PushNotifications.addDeviceInterest("hello");
-
-                    if (!preference_set) {
-                        Intent intent = new Intent(LoginActivity.this, PreferenceActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                    String userID = String.valueOf(response.getInt("user_id"));
+                    integrateBeams(userID);
                 } catch (JSONException ex) {
                     Toast toast = Toast.makeText(LoginActivity.this,
                             "Login failed, please try again", Toast.LENGTH_LONG);
@@ -117,6 +116,50 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public HashMap<String, String> setHeaders() {
                 return null;
+            }
+        });
+    }
+
+    private void integrateBeams(String userID) {
+        final String token = Helper.getToken(mContext);
+        BeamsTokenProvider tokenProvider = new BeamsTokenProvider(
+                AppConfig.beamsTokenURL(token),
+                new AuthDataGetter() {
+                    @NotNull
+                    @Override
+                    public AuthData getAuthData() {
+                        // Headers and URL query params your auth endpoint needs to
+                        // request a Beams Token for a given user
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        HashMap<String, String> queryParams = new HashMap<>();
+                        return new AuthData(
+                                headers,
+                                queryParams
+                        );
+                    }
+                }
+        );
+
+        PushNotifications.setUserId(userID, tokenProvider, new BeamsCallback<Void, PusherCallbackError>() {
+            @Override
+            public void onSuccess(@NotNull Void... voids) {
+                Log.i("BEAMS", "SUCCESS!!!");
+                if (!preference_set) {
+                    Intent intent = new Intent(LoginActivity.this, PreferenceActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(PusherCallbackError pusherCallbackError) {
+                Toast toast = Toast.makeText(mContext, "An error occurred.", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }
